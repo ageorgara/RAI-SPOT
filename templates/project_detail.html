@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto p-8">
+  <a href="{{ url_for('my_projects') if is_owner else url_for('explore_projects') }}" class="text-slate-400 hover:text-white text-sm mb-6 inline-block">&larr; Back</a>
+
+  <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-8 mb-6">
+    <div class="flex items-start justify-between mb-4">
+      <div><h1 class="text-2xl font-bold mb-2">{{ project.title }}</h1>
+        <div class="flex items-center gap-3 text-sm text-slate-400">
+          <span>{{ project.owner.name }}</span>
+          {% if project.deadline %}<span>{{ project.deadline.strftime('%d %b %Y') }}</span>{% endif %}
+          <span>{{ 'Private' if project.mode == 'private' else 'Public' }}</span>
+        </div></div>
+      {% if project.is_closed %}<span class="bg-red-500/15 text-red-400 px-3 py-1 rounded-lg text-sm font-medium">Closed</span>
+      {% else %}<span class="bg-emerald-500/15 text-emerald-400 px-3 py-1 rounded-lg text-sm font-medium">Open</span>{% endif %}
+    </div>
+    <p class="text-slate-300 leading-relaxed">{{ project.description }}</p>
+  </div>
+
+  {% if not is_owner and project.mode == 'public' and not project.is_closed %}
+  <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4">Express Interest</h2>
+    {% if user_bid %}<p class="text-emerald-400 text-sm">&#10003; You've already expressed interest.</p>
+    {% else %}
+    <form method="POST" action="{{ url_for('place_bid', project_id=project.id) }}" class="space-y-3">
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Why are you interested?</label>
+        <textarea name="message" required rows="3" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm resize-none" placeholder="What would you bring to this project?"></textarea></div>
+      <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium px-5 py-2.5 rounded-xl hover:opacity-90 transition text-sm">Submit</button>
+    </form>{% endif %}
+  </div>{% endif %}
+
+  {% if is_owner and project.mode == 'public' and not project.is_closed %}
+  <form method="POST" action="{{ url_for('close_project', project_id=project.id) }}" class="mb-6">
+    <button type="submit" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 font-medium px-5 py-2.5 rounded-xl transition text-sm" onclick="return confirm('Close this call and get AI recommendations?')">Close Call & Get Recommendations</button>
+  </form>{% endif %}
+
+  {% if is_owner and bids %}
+  <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4">Interested ({{ bids|length }})</h2>
+    {% for b in bids %}
+    <div class="bg-slate-800/60 rounded-xl p-4 mb-3">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ b.bidder.avatar_color }} flex items-center justify-center text-white text-xs font-bold">{{ b.bidder.initials }}</div>
+        <div><a href="{{ url_for('view_user', user_id=b.bidder.id) }}" class="text-white font-medium text-sm hover:text-violet-300 transition">{{ b.bidder.name }}</a>
+          <p class="text-xs text-slate-500">{{ b.created_at.strftime('%d %b %Y') }}</p></div></div>
+      <p class="text-slate-400 text-sm">{{ b.message }}</p>
+    </div>{% endfor %}
+  </div>{% endif %}
+
+  {% if is_owner and rec_data %}
+  <div class="bg-gradient-to-br from-violet-500/10 to-purple-600/10 border border-violet-500/30 rounded-2xl p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4">&#10024; AI Team Recommendations</h2>
+    {% if rec_data.error %}<p class="text-red-400 text-sm">{{ rec_data.error }}</p>
+    {% else %}
+    <p class="text-slate-300 text-sm leading-relaxed mb-4">{{ rec_data.overall_reasoning }}</p>
+    {% for team in rec_data.teams %}
+    <div class="bg-slate-900/60 rounded-xl p-5 mb-4">
+      <h3 class="text-white font-semibold text-sm mb-3">Team Option {{ loop.index }}</h3>
+      {% for m in team.members %}
+      <div class="flex items-center gap-3 bg-slate-800/40 rounded-lg p-3 mb-2">
+        {% if m.user_obj %}<div class="w-8 h-8 rounded-full bg-gradient-to-br {{ m.user_obj.avatar_color }} flex items-center justify-center text-white text-xs font-bold">{{ m.user_obj.initials }}</div>
+        <div class="flex-1"><a href="{{ url_for('view_user', user_id=m.user_obj.id) }}" class="text-white text-sm font-medium hover:text-violet-300 transition">{{ m.name }}</a><p class="text-xs text-violet-400">{{ m.role_in_team }}</p></div>
+        <a href="{{ url_for('thread', peer_id=m.user_obj.id) }}" class="text-slate-400 hover:text-violet-400 transition text-xs">Message &rarr;</a>
+        {% else %}<div class="flex-1"><p class="text-white text-sm">{{ m.name }}</p><p class="text-xs text-violet-400">{{ m.role_in_team }}</p></div>{% endif %}
+      </div>{% endfor %}
+      <p class="text-slate-400 text-sm mt-3">{{ team.rationale }}</p>
+    </div>{% endfor %}{% endif %}
+  </div>{% endif %}
+
+  {% if is_owner %}
+  <form method="POST" action="{{ url_for('rerun_recommendation', project_id=project.id) }}">
+    <button type="submit" class="text-violet-400 hover:text-violet-300 text-sm font-medium transition">&#10024; Re-run AI recommendation</button>
+  </form>{% endif %}
+</div>
+{% endblock %}

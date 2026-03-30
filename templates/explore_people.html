@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Explore People – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto p-8">
+  <h1 class="text-2xl font-bold mb-6">Explore</h1>
+  <form class="relative mb-6"><svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <input name="q" value="{{ q }}" placeholder="Search people..." class="w-full bg-slate-900 border border-slate-800 rounded-2xl pl-12 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition"></form>
+  <div class="flex gap-2 mb-6">
+    <a href="{{ url_for('explore_projects') }}" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800">Projects</a>
+    <a href="{{ url_for('explore_people') }}" class="px-4 py-2 rounded-xl text-sm font-medium bg-violet-500/15 text-violet-300">People</a>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    {% for u in users %}
+    <a href="{{ url_for('view_user', user_id=u.id) }}" class="bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 rounded-2xl p-5 transition">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ u.avatar_color }} flex items-center justify-center text-white text-sm font-bold">{{ u.initials }}</div>
+        <div><p class="text-white font-semibold">{{ u.name }}</p>
+          <div class="flex gap-1.5 mt-0.5 text-slate-500">
+            {% if u.website %}<span class="text-xs">🌐</span>{% endif %}
+            {% if u.linkedin %}<span class="text-xs">in</span>{% endif %}
+            {% if u.scholar %}<span class="text-xs">🎓</span>{% endif %}
+          </div></div>
+      </div>
+      <p class="text-slate-400 text-sm line-clamp-2">{{ u.bio }}</p>
+    </a>
+    {% else %}<p class="text-slate-500 col-span-2">No people found.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

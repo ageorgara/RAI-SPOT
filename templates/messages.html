@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Messages – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto p-8">
+  <h1 class="text-2xl font-bold mb-6">Messages</h1>
+  {% for p in peers %}
+  <a href="{{ url_for('thread', peer_id=p.user.id) }}" class="flex items-center gap-4 bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 rounded-2xl p-4 transition mb-2">
+    <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ p.user.avatar_color }} flex items-center justify-center text-white text-sm font-bold shrink-0">{{ p.user.initials }}</div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between"><span class="text-white font-medium text-sm">{{ p.user.name }}</span>
+        {% if p.unread > 0 %}<span class="bg-violet-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{{ p.unread }}</span>{% endif %}</div>
+      <p class="text-slate-500 text-xs truncate">{{ p.last_msg.text if p.last_msg else '' }}</p>
+    </div>
+  </a>
+  {% else %}<p class="text-slate-500">No messages yet. Start a conversation from someone's profile!</p>{% endfor %}
+</div>
+{% endblock %}

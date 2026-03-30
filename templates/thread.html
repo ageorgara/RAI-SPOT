@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Chat with {{ peer.name }} – CollabHub{% endblock %}
+{% block content %}
+<div class="flex flex-col" style="height:calc(100vh - 0px)">
+  <div class="p-4 border-b border-slate-800 flex items-center gap-3 shrink-0">
+    <a href="{{ url_for('messages_list') }}" class="text-slate-400 hover:text-white transition">&larr;</a>
+    <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ peer.avatar_color }} flex items-center justify-center text-white text-xs font-bold">{{ peer.initials }}</div>
+    <div><p class="text-white font-medium text-sm">{{ peer.name }}</p><p class="text-xs text-slate-500">{{ peer.email }}</p></div>
+  </div>
+  <div class="flex-1 overflow-y-auto p-6 space-y-3">
+    {% for m in msgs %}
+    <div class="flex {{ 'justify-end' if m.from_id == current_user.id else 'justify-start' }}">
+      <div class="max-w-sm px-4 py-2.5 rounded-2xl text-sm {{ 'bg-violet-500 text-white' if m.from_id == current_user.id else 'bg-slate-800 text-slate-200' }}">
+        <p>{{ m.text }}</p>
+        <p class="text-xs mt-1 {{ 'text-violet-200' if m.from_id == current_user.id else 'text-slate-500' }}">{{ m.created_at.strftime('%d %b %H:%M') }}</p>
+      </div>
+    </div>{% endfor %}
+  </div>
+  <div class="p-4 border-t border-slate-800 shrink-0">
+    <form method="POST" class="flex gap-2">
+      <input name="text" required placeholder="Type a message..." autofocus class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition">
+      <button type="submit" class="bg-violet-500 hover:bg-violet-600 text-white px-4 rounded-xl transition text-sm">Send</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

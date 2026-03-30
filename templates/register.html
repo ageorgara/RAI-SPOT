@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Register – CollabHub{% endblock %}
+{% block public_content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-lg">
+    <a href="{{ url_for('login') }}" class="text-slate-400 hover:text-white text-sm flex items-center gap-1 mb-6 transition">&larr; Back to login</a>
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <h2 class="text-xl font-bold mb-1">Create Account</h2>
+      <p class="text-slate-400 text-sm mb-6">Your registration will be reviewed by an administrator</p>
+      <form method="POST" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Full Name <span class="text-red-400">*</span></label><input name="name" required class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="Jane Doe"></div>
+          <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Email <span class="text-red-400">*</span></label><input name="email" type="email" required class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="you@uni.edu"></div>
+        </div>
+        <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Password <span class="text-red-400">*</span></label><input name="password" type="password" required class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="••••••••"></div>
+        <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Bio & Interests <span class="text-red-400">*</span></label><textarea name="bio" required rows="3" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm resize-none" placeholder="Describe your expertise..."></textarea></div>
+        <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Website</label><input name="website" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="https://yoursite.com"></div>
+        <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">LinkedIn</label><input name="linkedin" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="https://linkedin.com/in/you"></div>
+        <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Google Scholar</label><input name="scholar" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="https://scholar.google.com/..."></div>
+        <button type="submit" class="w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition shadow-lg shadow-violet-500/25">Submit Registration</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Admin – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto p-8">
+  <h1 class="text-2xl font-bold mb-6">Admin Panel</h1>
+
+  {% if pending %}
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold mb-4 text-amber-400">Pending Approvals ({{ pending|length }})</h2>
+    {% for u in pending %}
+    <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 flex items-start gap-4 mb-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ u.avatar_color }} flex items-center justify-center text-white font-bold shrink-0">{{ u.initials }}</div>
+      <div class="flex-1 min-w-0"><p class="text-white font-semibold">{{ u.name }}</p><p class="text-slate-400 text-sm">{{ u.email }}</p><p class="text-slate-400 text-sm mt-1 line-clamp-2">{{ u.bio }}</p></div>
+      <div class="flex gap-2 shrink-0">
+        <form method="POST" action="{{ url_for('approve_user', user_id=u.id) }}"><button type="submit" class="bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 px-4 py-2 rounded-xl text-sm font-medium transition">Approve</button></form>
+        <form method="POST" action="{{ url_for('reject_user', user_id=u.id) }}"><button type="submit" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 px-4 py-2 rounded-xl text-sm font-medium transition">Reject</button></form>
+      </div>
+    </div>{% endfor %}
+  </div>{% endif %}
+
+  <h2 class="text-lg font-semibold mb-4">Approved Users ({{ approved|length }})</h2>
+  <div class="grid grid-cols-2 gap-3 mb-8">
+    {% for u in approved %}
+    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ u.avatar_color }} flex items-center justify-center text-white text-xs font-bold">{{ u.initials }}</div>
+      <div class="min-w-0"><p class="text-white text-sm font-medium truncate">{{ u.name }}</p><p class="text-slate-500 text-xs truncate">{{ u.email }}</p></div>
+      <span class="text-emerald-500 ml-auto">&#10003;</span>
+    </div>{% endfor %}
+  </div>
+
+  {% if rejected %}
+  <h2 class="text-lg font-semibold mb-4">Rejected ({{ rejected|length }})</h2>
+  <div class="grid grid-cols-2 gap-3">
+    {% for u in rejected %}
+    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3 opacity-60">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ u.avatar_color }} flex items-center justify-center text-white text-xs font-bold">{{ u.initials }}</div>
+      <div class="min-w-0"><p class="text-white text-sm font-medium truncate">{{ u.name }}</p><p class="text-slate-500 text-xs truncate">{{ u.email }}</p></div>
+    </div>{% endfor %}
+  </div>{% endif %}
+</div>
+{% endblock %}

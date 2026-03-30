@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}My Projects – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">My Projects</h1>
+    <a href="{{ url_for('new_project') }}" class="bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium px-5 py-2.5 rounded-xl hover:opacity-90 transition shadow-lg shadow-violet-500/25 text-sm">+ New Project</a>
+  </div>
+  {% for p in projects %}
+  <a href="{{ url_for('project_detail', project_id=p.id) }}" class="block bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 rounded-2xl p-5 transition group mb-3">
+    <div class="flex items-start justify-between mb-2">
+      <h3 class="text-white font-semibold group-hover:text-violet-300 transition">{{ p.title }}</h3>
+      <div class="flex gap-2">
+        {% if p.mode == 'private' %}<span class="text-xs font-medium text-amber-400 bg-amber-400/10 px-2 py-1 rounded-lg">Private</span>
+        {% else %}<span class="text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-lg">Public</span>{% endif %}
+        {% if p.is_closed %}<span class="text-xs font-medium text-red-400 bg-red-400/10 px-2 py-1 rounded-lg">Closed</span>
+        {% else %}<span class="text-xs font-medium text-blue-400 bg-blue-400/10 px-2 py-1 rounded-lg">Open</span>{% endif %}
+      </div>
+    </div>
+    <p class="text-slate-400 text-sm line-clamp-2 mb-3">{{ p.description }}</p>
+    <div class="text-xs text-slate-500"><span>{{ p.bids|length }} interested</span></div>
+  </a>
+  {% else %}<p class="text-slate-500">No projects yet. Create one!</p>{% endfor %}
+</div>
+{% endblock %}

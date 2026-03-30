@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}New Project – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-8">
+  <a href="{{ url_for('my_projects') }}" class="text-slate-400 hover:text-white text-sm mb-6 inline-block">&larr; Back</a>
+  <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-bold mb-4">Pitch a New Project</h2>
+    <form method="POST" class="space-y-4">
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Title <span class="text-red-400">*</span></label><input name="title" required class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="Project name"></div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Description <span class="text-red-400">*</span></label><textarea name="description" required rows="4" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm resize-none" placeholder="Describe the project and ideal collaborators..."></textarea></div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Mode</label>
+        <div class="flex gap-3 mt-2">
+          <label class="flex-1 cursor-pointer"><input type="radio" name="mode" value="public" checked class="hidden peer">
+            <div class="p-4 rounded-xl border border-slate-700 bg-slate-800 peer-checked:border-violet-500 peer-checked:bg-violet-500/10 transition"><p class="font-medium text-sm">Public Call</p><p class="text-xs text-slate-500 mt-1">Others bid; AI recommends at close</p></div></label>
+          <label class="flex-1 cursor-pointer"><input type="radio" name="mode" value="private" class="hidden peer">
+            <div class="p-4 rounded-xl border border-slate-700 bg-slate-800 peer-checked:border-violet-500 peer-checked:bg-violet-500/10 transition"><p class="font-medium text-sm">Private Match</p><p class="text-xs text-slate-500 mt-1">AI privately recommends from all users</p></div></label>
+        </div>
+      </div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Deadline (optional)</label><input name="deadline" type="date" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm"></div>
+      <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium px-5 py-2.5 rounded-xl hover:opacity-90 transition text-sm">Create Project</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

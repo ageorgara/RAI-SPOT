@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile – CollabHub{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-8">
+  <a href="{{ url_for('profile') }}" class="text-slate-400 hover:text-white text-sm mb-6 inline-block">&larr; Back</a>
+  <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-8">
+    <h1 class="text-xl font-bold mb-6">Edit Profile</h1>
+    <form method="POST" class="space-y-4">
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Name</label><input name="name" value="{{ current_user.name }}" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm"></div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Bio</label><textarea name="bio" rows="4" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm resize-none">{{ current_user.bio }}</textarea></div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Website</label><input name="website" value="{{ current_user.website }}" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm"></div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">LinkedIn</label><input name="linkedin" value="{{ current_user.linkedin }}" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm"></div>
+      <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Google Scholar</label><input name="scholar" value="{{ current_user.scholar }}" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm"></div>
+      <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium px-5 py-2.5 rounded-xl hover:opacity-90 transition text-sm">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
