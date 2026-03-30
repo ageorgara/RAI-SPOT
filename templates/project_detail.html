@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ project.title }} – CollabHub{% endblock %}
+{% block title %}{{ project.title }} – RAISPOT{% endblock %}
 {% block content %}
 <div class="max-w-4xl mx-auto p-8">
   <a href="{{ url_for('my_projects') if is_owner else url_for('explore_projects') }}" class="text-slate-400 hover:text-white text-sm mb-6 inline-block">&larr; Back</a>
