@@ -10,6 +10,29 @@
       <a href="{{ url_for('edit_profile') }}" class="ml-auto text-violet-400 hover:text-violet-300 text-sm font-medium transition">Edit Profile</a>
     </div>
     <p class="text-slate-300 leading-relaxed mb-6">{{ current_user.bio or 'No bio yet.' }}</p>
+
+    {% if current_user.expertise_list %}
+    <div class="mb-5">
+      <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Expertise</p>
+      <div class="flex flex-wrap gap-2">
+        {% for kw in current_user.expertise_list %}
+        <span class="text-xs font-medium bg-violet-500/15 text-violet-300 px-3 py-1 rounded-full">{{ kw }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if current_user.research_interests_list %}
+    <div class="mb-5">
+      <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Research Interests</p>
+      <div class="flex flex-wrap gap-2">
+        {% for kw in current_user.research_interests_list %}
+        <span class="text-xs font-medium bg-teal-500/15 text-teal-300 px-3 py-1 rounded-full">{{ kw }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
     <div class="flex flex-wrap gap-3">
       {% if current_user.website %}<a href="{{ current_user.website }}" target="_blank" class="text-sm text-violet-400 bg-violet-400/10 px-3 py-1.5 rounded-lg hover:bg-violet-400/20 transition">Website &nearr;</a>{% endif %}
       {% if current_user.linkedin %}<a href="{{ current_user.linkedin }}" target="_blank" class="text-sm text-blue-400 bg-blue-400/10 px-3 py-1.5 rounded-lg hover:bg-blue-400/20 transition">LinkedIn &nearr;</a>{% endif %}

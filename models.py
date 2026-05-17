@@ -15,6 +15,8 @@ class User(UserMixin, db.Model):
     website = db.Column(db.String(300), default="")
     linkedin = db.Column(db.String(300), default="")
     scholar = db.Column(db.String(300), default="")
+    expertise_keywords = db.Column(db.String(500), default="")
+    research_interests = db.Column(db.String(500), default="")
     role = db.Column(db.String(20), default="user")
     status = db.Column(db.String(20), default="pending")
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
@@ -27,6 +29,14 @@ class User(UserMixin, db.Model):
 
     def check_password(self, pw):
         return check_password_hash(self.password_hash, pw)
+
+    @property
+    def expertise_list(self):
+        return [k.strip() for k in (self.expertise_keywords or "").split(",") if k.strip()]
+
+    @property
+    def research_interests_list(self):
+        return [k.strip() for k in (self.research_interests or "").split(",") if k.strip()]
 
     @property
     def initials(self):
@@ -53,9 +63,20 @@ class Project(db.Model):
     mode = db.Column(db.String(20), default="public")
     deadline = db.Column(db.Date, nullable=True)
     status = db.Column(db.String(20), default="open")
+    expertise_keywords = db.Column(db.String(500), default="")
+    impact_areas = db.Column(db.String(500), default="")
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     bids = db.relationship("Bid", backref="project", lazy=True, cascade="all, delete-orphan")
+    discussion_posts = db.relationship("DiscussionPost", backref="project", lazy=True, cascade="all, delete-orphan", order_by="DiscussionPost.created_at")
+
+    @property
+    def expertise_list(self):
+        return [k.strip() for k in (self.expertise_keywords or "").split(",") if k.strip()]
+
+    @property
+    def impact_areas_list(self):
+        return [k.strip() for k in (self.impact_areas or "").split(",") if k.strip()]
 
     @property
     def is_past_deadline(self):
@@ -86,6 +107,16 @@ class Message(db.Model):
 
     sender = db.relationship("User", foreign_keys=[from_id])
     recipient = db.relationship("User", foreign_keys=[to_id])
+
+
+class DiscussionPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    author = db.relationship("User", foreign_keys=[user_id])
 
 
 class AIRecommendation(db.Model):

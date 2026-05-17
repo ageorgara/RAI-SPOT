@@ -15,7 +15,27 @@
       {% if project.is_closed %}<span class="bg-red-500/15 text-red-400 px-3 py-1 rounded-lg text-sm font-medium">Closed</span>
       {% else %}<span class="bg-emerald-500/15 text-emerald-400 px-3 py-1 rounded-lg text-sm font-medium">Open</span>{% endif %}
     </div>
-    <p class="text-slate-300 leading-relaxed">{{ project.description }}</p>
+    <p class="text-slate-300 leading-relaxed mb-5">{{ project.description }}</p>
+    {% if project.expertise_list %}
+    <div class="mb-4">
+      <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Expertise Needed</p>
+      <div class="flex flex-wrap gap-2">
+        {% for kw in project.expertise_list %}
+        <span class="text-xs font-medium bg-violet-500/15 text-violet-300 px-3 py-1 rounded-full">{{ kw }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% if project.impact_areas_list %}
+    <div>
+      <p class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Areas of Impact</p>
+      <div class="flex flex-wrap gap-2">
+        {% for kw in project.impact_areas_list %}
+        <span class="text-xs font-medium bg-amber-500/15 text-amber-300 px-3 py-1 rounded-full">{{ kw }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 
   {% if not is_owner and project.mode == 'public' and not project.is_closed %}
@@ -72,5 +92,37 @@
   <form method="POST" action="{{ url_for('rerun_recommendation', project_id=project.id) }}">
     <button type="submit" class="text-violet-400 hover:text-violet-300 text-sm font-medium transition">&#10024; Re-run AI recommendation</button>
   </form>{% endif %}
+
+  <!-- Discussion -->
+  <div id="discussion" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 mt-6">
+    <h2 class="text-lg font-semibold mb-4">Discussion</h2>
+
+    {% if discussion_posts %}
+    <div class="space-y-4 mb-6">
+      {% for post in discussion_posts %}
+      <div class="flex gap-3">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ post.author.avatar_color }} flex items-center justify-center text-white text-xs font-bold shrink-0 mt-0.5">{{ post.author.initials }}</div>
+        <div class="flex-1 bg-slate-800/60 rounded-xl px-4 py-3">
+          <div class="flex items-baseline gap-2 mb-1">
+            <a href="{{ url_for('view_user', user_id=post.author.id) }}" class="text-sm font-medium text-white hover:text-violet-300 transition">{{ post.author.name }}</a>
+            <span class="text-xs text-slate-500">{{ post.created_at.strftime('%d %b %Y, %H:%M') }}</span>
+          </div>
+          <p class="text-slate-300 text-sm whitespace-pre-wrap">{{ post.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-slate-500 text-sm mb-6">No messages yet. Be the first to post.</p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('post_discussion', project_id=project.id) }}" class="flex gap-3">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ current_user.avatar_color }} flex items-center justify-center text-white text-xs font-bold shrink-0 mt-1">{{ current_user.initials }}</div>
+      <div class="flex-1 flex gap-2">
+        <textarea name="text" required rows="2" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm resize-none" placeholder="Ask a question or leave a comment…"></textarea>
+        <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium px-4 py-2 rounded-xl hover:opacity-90 transition text-sm self-end">Post</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

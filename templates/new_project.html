@@ -16,6 +16,16 @@
             <div class="p-4 rounded-xl border border-slate-700 bg-slate-800 peer-checked:border-violet-500 peer-checked:bg-violet-500/10 transition"><p class="font-medium text-sm">Private Match</p><p class="text-xs text-slate-500 mt-1">AI privately recommends from all users</p></div></label>
         </div>
       </div>
+      <div>
+        <label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Expertise Keywords</label>
+        <p class="text-xs text-slate-500 mt-0.5 mb-1">Comma-separated skills needed (e.g. Machine Learning, NLP, Statistics)</p>
+        <input name="expertise_keywords" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="e.g. Machine Learning, NLP, Statistics">
+      </div>
+      <div>
+        <label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Areas of Impact</label>
+        <p class="text-xs text-slate-500 mt-0.5 mb-1">Comma-separated impact areas (e.g. Healthcare, Climate, Education)</p>
+        <input name="impact_areas" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm" placeholder="e.g. Healthcare, Climate, Education">
+      </div>
       <div><label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Deadline (optional)</label><input name="deadline" type="date" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition text-sm"></div>
       <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium px-5 py-2.5 rounded-xl hover:opacity-90 transition text-sm">Create Project</button>
     </form>

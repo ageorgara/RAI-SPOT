@@ -11,7 +11,7 @@ from flask_login import (
 )
 from dotenv import load_dotenv
 
-from models import db, User, Project, Bid, Message, AIRecommendation
+from models import db, User, Project, Bid, Message, AIRecommendation, DiscussionPost
 
 load_dotenv()
 
@@ -162,6 +162,8 @@ def edit_profile():
         current_user.website = request.form.get("website", "").strip()
         current_user.linkedin = request.form.get("linkedin", "").strip()
         current_user.scholar = request.form.get("scholar", "").strip()
+        current_user.expertise_keywords = request.form.get("expertise_keywords", "").strip()
+        current_user.research_interests = request.form.get("research_interests", "").strip()
         db.session.commit()
         flash("Profile updated.", "success")
         return redirect(url_for("profile"))
@@ -203,6 +205,8 @@ def new_project():
             description=request.form.get("description", "").strip(),
             mode=request.form.get("mode", "public"),
             deadline=deadline,
+            expertise_keywords=request.form.get("expertise_keywords", "").strip(),
+            impact_areas=request.form.get("impact_areas", "").strip(),
         )
         db.session.add(project)
         db.session.commit()
@@ -242,8 +246,11 @@ def project_detail(project_id):
                 u = db.session.get(User, int(mid)) if str(mid).isdigit() else None
                 member["user_obj"] = u
 
+    discussion_posts = project.discussion_posts
+
     return render_template("project_detail.html", project=project, is_owner=is_owner,
-                           user_bid=user_bid, bids=bids, rec_data=rec_data)
+                           user_bid=user_bid, bids=bids, rec_data=rec_data,
+                           discussion_posts=discussion_posts)
 
 
 @app.route("/projects/<int:project_id>/bid", methods=["POST"])
@@ -261,6 +268,24 @@ def place_bid(project_id):
     db.session.commit()
     flash("Interest submitted!", "success")
     return redirect(url_for("project_detail", project_id=project_id))
+
+
+@app.route("/projects/<int:project_id>/discuss", methods=["POST"])
+@login_required
+def post_discussion(project_id):
+    project = db.session.get(Project, project_id)
+    if not project:
+        abort(404)
+    if project.mode == "private" and project.owner_id != current_user.id:
+        abort(403)
+    text = request.form.get("text", "").strip()
+    if not text:
+        flash("Message cannot be empty.", "warning")
+        return redirect(url_for("project_detail", project_id=project_id))
+    post = DiscussionPost(project_id=project_id, user_id=current_user.id, text=text)
+    db.session.add(post)
+    db.session.commit()
+    return redirect(url_for("project_detail", project_id=project_id) + "#discussion")
 
 
 @app.route("/projects/<int:project_id>/close", methods=["POST"])
